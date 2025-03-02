@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "avenirnextltpro";
+  font-display: swap;
+  src:
+    url("./assets/fonts/avenirbold.otf") format("otf"),
+    url("./assets/fonts/avenirbold.woff2") format("woff2"),
+    url("./assets/fonts/avenirbold.woff") format("woff");
+}
+
+@font-face {
+  font-family: "ibmplexmono";
+  font-display: swap;
+  font-weight: normal;
+  font-weight: 400;
+  src:
+    url("./assets/fonts/ibmplexmono-regular.otf") format(otf),
+    url("./assets/fonts/ibmplexmono-regular.woff2") format(woff2),
+    url("./assets/fonts/ibmplexmono-regular.woff") format(woff);
+}
+
+:root {
+  --deep-pink: #fb0296;
+  --black: #0d111a;
+  --pink: #d366d8;
+  --pink-transparent: #ff00932b;
+  --turquoise: #19fdf7;
+  --white: #fff;
+  --grd-val: #dbe7ff;
+  --green: #00ff0a;
+  --yellow-text: #ffd500;
+  --yellow-background: #fff700;
+  --white-orange: #F0C78E;
+  --transparent: #ffffff00;
+  --cyan-text: #002985;
+  --cyan-background: #03246d;
+  --green-text: #389e0d;
+  --green-background: #b7eb8f;
+  --volcano-background: #8f0000;
+  --volcano-border: #ff7878;
+  --whiteblue: #adc6ff;
+  --greyblue: #7081a6;
+  --ss: #828ab4;
+
+  --pink-black:#58396d;
+  --pink-white:#c43084;
+
+  --width-textareas-back: 73vw;
+  --width-textareas-front: 78vw;
+
+  --height-textareas-back: 100%;
+  --height-textareas-front: 100%;
+
+  --border-top-right-radius: 0px;
+  --border-bottom-right-radius: 0px;
+
+  --textarea-content-left-border-top-left-radius: 0px;
+  --textarea-content-left-border-top-right-radius: 0px;
+  --textarea-content-left-border-bottom-right-radius: 0px;
+  --textarea-content-left-border-bottom-left-radius: 20px;
+
+  --textarea-content-right-border-top-left-radius: 0px;
+  --textarea-content-right-border-top-right-radius: 0px;
+  --textarea-content-right-border-bottom-right-radius: 20px;
+  --textarea-content-right-border-bottom-left-radius: 0px;
+
+  --width-front-left: 31%;
+  --height-front-left-right: 427px;
+  --text-area-content-left-right: 100%;
+
+  --width-front-right: calc(98% - var(--width-front-left ));
+  --schema-tab-border-top-left-radius: 0px;
+  --schema-tab-border-top-right-radius: 0px;
+
+  --radial-gradient-background: 250, 250, 250;
+  --solid-color-background: 15, 15, 15;
+  --overlay-color: 255, 255, 255;
+  --front-height: 450px;
+
+  --max-width: 1100px;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--pink-transparent);
+  border-radius: 10px;
+}
+
+
+body{
+  background-color: #050402;
+}
+
+
+@media screen and (max-width: 1092px) {
+  :root {
+  --height-textareas-back: 100%;
+  --height-textareas-front: 100%;
+  --width-front-left: 100%;
+  --flex-basis: 100%;
+  }
+}
+
+@media screen and (max-width: 512px) {
+  :root {
+    --height-textareas-back: 100%;
+    --height-textareas-front: 100%;
+    --schema-tab-border-top-left-radius: 20px;
+    --schema-tab-border-top-right-radius: 20px;
+    --queries-tab-border-top-left-radius: 20px;
+    --front-height: 450px;
+    --height-front-left-right: 303px;
+    --text-area-content-left-right: 244px;
+    --border-top-right-radius: 20px;
+    --border-bottom-right-radius: 20px;
+    --textarea-content-left-border-top-left-radius: 0px;
+    --textarea-content-left-border-top-right-radius: 0px;
+    --textarea-content-left-border-bottom-left-radius: 20px;
+    --textarea-content-left-border-bottom-right-radius: 20px;
+    --textarea-content-right-border-top-left-radius: 20px;
+    --textarea-content-right-border-top-right-radius: 20px;
+    --textarea-content-right-border-bottom-left-radius: 20px;
+    --textarea-content-right-border-bottom-right-radius: 20px;
+  }
+}
+
+img{
+  user-select: none;
+-moz-user-select: none;
+-webkit-user-drag: none;
+-webkit-user-select: none;
+-ms-user-select: none;
+
+}
