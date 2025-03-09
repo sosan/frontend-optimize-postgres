@@ -5,11 +5,11 @@ This project is structured into two main directories: `web` and `worker`, each s
 ![](./examples/web.webp)
 
 ## 📁 Project Structure
-
+```txt
 /
 ├── web/ → Frontend application built with React and TypeScript.
 └── worker/ → Backend built with Hono (a framework for Cloudflare Workers) using TypeScript.
-
+```
 ---
 
 ## 📦 `web/` - Frontend
