@@ -1,9 +1,8 @@
-// import { Message } from "@upstash/kafka";
-import { KafkaJS } from "@confluentinc/kafka-javascript";
 import { ColumnDataType, DataJSON } from "./model";
-import { Analysis, AllStatics, ResponseResults, CounterAnalytics } from "../src/models/models";
+// import { Analysis, ResponseResults, CounterAnalytics } from "./model";
+import { AllStatics, Analysis, ResponseResults, CounterAnalytics } from "../../web/models/models";
 
-export async function generateResponseResult(msg: KafkaJS.KafkaMessage): Promise<DataJSON> {
+export async function generateResponseResult(msg: ResponseResults): Promise<DataJSON> {
   if (!msg) {
     const data: DataJSON = {
       status: 400,
@@ -12,32 +11,32 @@ export async function generateResponseResult(msg: KafkaJS.KafkaMessage): Promise
     }
     return data;
   }
-  const value: ResponseResults = JSON.parse(msg?.value?.toString() as string);
-  if (!value
-    || value.status !== "OK"
-    || value.optimizationDDL?.status !== "OK"
-    || value.optimizationDML?.status !== "OK") {
-    const data: DataJSON = {
-      status: 400,
-      tz: new Date().toISOString(),
-      logID: msg?.key?.toString(),
-    }
-    return data
-  }
+  // const value: ResponseResults = JSON.parse(msg?.value?.toString() as string);
+  // if (!value
+  //   || value.status !== "OK"
+  //   || value.optimizationDDL?.status !== "OK"
+  //   || value.optimizationDML?.status !== "OK") {
+  //   const data: DataJSON = {
+  //     status: 400,
+  //     tz: new Date().toISOString(),
+  //     logID: msg?.key?.toString(),
+  //   }
+  //   return data
+  // }
 
   let dataSources: ColumnDataType[] = await setTablesAnalysis(
-    value.optimizationDDL.data?.analysis as Analysis,
-    value.optimizationDML.data?.analysis as Analysis
+    msg.optimizationDDL?.data?.analysis as Analysis,
+    msg.optimizationDML?.data?.analysis as Analysis
   );
 
   // console.log("generateResponseResult message=>" + JSON.stringify(msg));
   // console.log("dataSources=" + JSON.stringify(dataSources));
-  const counterStats = await getOptimizationStatistics(value.optimizationDDL.data?.analysis?.statistics as AllStatics);
+  const counterStats = await getOptimizationStatistics(msg.optimizationDDL?.data?.analysis?.statistics as AllStatics);
   const data: DataJSON = {
     status: 200,
     tz: new Date().toISOString(),
     columnDataSource: dataSources,
-    logID: msg?.key?.toString(),
+    logID: msg?.currentID?.toString(), // currentid or
     countStats: counterStats
   }
   return data

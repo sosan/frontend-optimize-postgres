@@ -14,7 +14,7 @@
     ],
     "target": "esnext",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "removeComments": true,
     "preserveConstEnums": true,
@@ -37,17 +37,21 @@
     "allowJs": false,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "noEmit": true,
     "isolatedModules": true,
     "incremental": true,
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "./web/*"
+        "./web/*",
+        "./web/**/*",
+        "./web/**/**/*",
+        "./web/**/**/**/*",
+        "./web/**/**/**/**/*"
       ],
       "@/public/*": [
-        "./public/*"
+        "./web/public/*"
       ]
     }
   },
@@ -66,6 +70,12 @@
   "include": [
     "next-env.d.ts",
     "scripts/compileAntCss.js",
-    "./web/components/WebGL/fragment.js"
+    "./web/components/WebGL/fragment.js",
+    "./web/**/*.tsx",
+    "./web/**/**/*.tsx",
+    "./web/**/**/**/*.tsx",
+    "./web/**/**/**/**/*.tsx",
+    "./web/**/**/**/**/**/*.tsx",
+    "./web/**/**/**/**/**/**/*.tsx"
   ]
 }

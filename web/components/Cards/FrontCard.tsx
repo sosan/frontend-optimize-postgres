@@ -1,8 +1,10 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { FormInstance } from "antd";
-import { Editor } from "../Textareas/Editor.js";
+import { Editor } from "../Textareas/Editor";
 import "../../assets/css/textarea.css";
+// import deleteImage from "../../assets/png/delete.png";
 import deleteImage from "../../assets/png/delete.png";
+import React from "react";
 
 const initialDDL = `-- Non-optimized DDL
 CREATE TABLE users (

@@ -5,11 +5,12 @@ import { sourcesRender } from "./sources.ts";
 
 // @ts-ignore
 import { Fragmen } from "./fragment.js";
+import React from "react";
 
 let canvas = null;
 let mode: any = null;
 
-const CURRENT_MODE = Fragmen.RAINBOW_MODE_GEEKEST_300;
+const CURRENT_MODE = Fragmen.MODE_GEEKEST_300;
 // let currentSource = "" as string;
 
 
@@ -31,7 +32,7 @@ interface ContainerProps {
 let fragmen: any = null;
 let globalWebGL = true;
 export function LoadingResultWebGL(props: ContainerProps) {
-  let [actualRenderingWebGL, setActualRenderingWebGL] = useState(false);
+  let [actualRenderingWebGL, setActualRenderingWebGL] = useState(props.initialRender);
   // let [globalWebGL, setGlobalWebGL] = useState(false);
   // let [globalWebGL, setGlobalWebGL] = useState(false);
 

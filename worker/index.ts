@@ -8,16 +8,15 @@ import { secureHeaders } from 'hono/secure-headers';
 import { cors } from 'hono/cors';
 import {  sendAssets, healthcheck, checkWS, handleWebsocket, queries } from './components/router';
 import { Context } from 'hono';
+import { Fetcher } from '@cloudflare/workers-types/experimental';
+import { CloudflareBindings } from '../worker-configuration';
 // import { wakeup } from './worker/commandBus.ts';
 
 type Bindings = {
   BACKEND: Fetcher
-  // ASSETS: Fetcher
-    // MY_NAME: string
-    // MY_KV: KVNamespace
 };
 
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono<{ Bindings: CloudflareBindings }>();
 // const app = new Hono();
 // app.use('/etag/*', etag())
 app.use(

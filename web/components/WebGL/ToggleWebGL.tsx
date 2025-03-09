@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import { EmitEvent } from '../Notification/eventEmitter';
 // import { EVENT_NAME_RESULT, ResultState } from "../Cards/BackCard.tsx";
 import { LOADING_RENDERING_RESULTS } from "../LoadingResults/indexLoadingResults";
+import { EXPLICATION_1 } from "../Explications/indexExplications";
+import React from "react";
 
 let bouncingToggle = false;
 export function ToggleWebGL() {
@@ -34,6 +36,7 @@ export function ToggleWebGL() {
     }, 1000);
 
     setIsJump("jump");
+    EmitEvent(EXPLICATION_1, !isRendering);
     EmitEvent("header", !isRendering);
     EmitEvent(LOADING_RENDERING_RESULTS, {
       globalRender: !isRendering

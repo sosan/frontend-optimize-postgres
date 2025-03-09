@@ -2,6 +2,7 @@ import { HeaderNav } from "../../components/Header/Header.js";
 import { MainContent } from "../../components/Main/indexMain.js";
 import { FooterContent } from '../../components/Footer/indexFooter.js';
 import { HeaderWebGL } from "@/components/WebGL/headerWebGL.tsx";
+import React from "react";
 
 export function Home() {
   return (

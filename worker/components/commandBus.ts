@@ -1,4 +1,5 @@
 import { Context } from "hono";
+import { Client, PublishToUrlResponse } from "@upstash/qstash";
 // import { Queries } from "./model";
 // import { hc } from "hono/client";
 // import { RecordMetadata } from "@confluentinc/kafka-javascript/types/kafkajs";
@@ -85,69 +86,48 @@ export interface ResponseSendMesssage {
   value: object;
 }
 
-export async function sendBusMessage(c: Context, message: any): Promise<boolean> {
-  const kafkaApiKey = c.env.KAFKA_USERNAME;
-  const kafkaApiSecret = c.env.KAFKA_PASSWORD;
-  const clusterId = c.env.KAFKA_CLUSTERID;
-  const region = c.env.KAFKA_REGION;
-  const topic = "post_optimicepostgres";
+let client: Client;
 
-  const authHeader = `Basic ${btoa(`${kafkaApiKey}:${kafkaApiSecret}`)}`;
-
-  const kafkaResponse = await fetch(
-    `https://${clusterId}.${region}.gcp.confluent.cloud/kafka/v3/clusters/${clusterId}/topics/${topic}/records`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authHeader,
-      },
-      body: JSON.stringify({
-        records: [
-          {
-            key: {
-              type: "string",
-              data: message.currentid as string,
-            },
-            value: {
-              type: "JSON",
-              data: JSON.stringify(message),
-            },
-          },
-        ],
-      }),
-    }
-  );
-
-  if (!kafkaResponse.ok) {
-    const errorBody = await kafkaResponse.text();
-    console.error("Error sending message to Kafka:", errorBody);
-    return false;
+export async function setClientQueue(c: Context) {
+  if (client === null || client === undefined) {
+    client = new Client({ token: c.env.QSTASH_TOKEN });
   }
+  return client;
+}
 
-  const producedRecords: ResponseSendMesssage = await kafkaResponse.json();
+export async function sendBusMessage(c: Context, message: any): Promise<boolean> {
+  const client = await setClientQueue(c);
+  const URI_BACKEND = `${c.env.URL_BACKEND }/wakeup/`;
+  const response: PublishToUrlResponse = await client.publishJSON({
+    url: URI_BACKEND,
+    body: JSON.stringify(message),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
   console.log(
     new Date().toISOString() +
     " FROM FRONTEND ----- Response producer message=>" +
-    JSON.stringify(producedRecords)
+    JSON.stringify(response)
   );
 
-  if (!producedRecords || producedRecords.error_code !== 200) {
-    return false;
-  }
+  // if (!producedRecords || producedRecords.error_code !== 200) {
+  //   return false;
+  // }
 
   // const recordMetadata = producedRecords[0];
-  const err = await wakeup(c, message.currentid, producedRecords);
-  console.log(
-    new Date().toISOString() +
-    " SENDED WAKUP TO BACKEND ----- response from wakeup" +
-    JSON.stringify(err)
-  );
-
-  return err.status !== 200;
+  // const err = await wakeup(c, message.currentid, message);
+  // console.log(
+  //   new Date().toISOString() +
+  //   " SENDED WAKUP TO BACKEND ----- response from wakeup" +
+  //   JSON.stringify(err)
+  // );
+  return true;
+  // return err.status !== 200;
 }
 
-async function wakeup(c: Context, currentid: string, responseProducer: ResponseSendMesssage) {
+async function wakeup(c: Context, currentid: string, message: any) {
   console.log(
     "FRONTEND | " +
     new Date().toISOString() +
@@ -160,12 +140,7 @@ async function wakeup(c: Context, currentid: string, responseProducer: ResponseS
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      currentid: currentid,
-      topic: responseProducer.topic_name,
-      partition: responseProducer.partition_id,
-      offset: responseProducer.offset,
-    }),
+    body: JSON.stringify(message),
   });
 
   let data = { status: 500 };
@@ -181,88 +156,3 @@ async function wakeup(c: Context, currentid: string, responseProducer: ResponseS
 
   return data;
 }
-
-// export interface ResponseSendMesssage {
-//   error_code: number;
-//   message: string;
-//   queue_name: string;
-//   timestamp: string;
-//   value: object;
-// }
-
-// export async function sendBusMessage(c: Context, message: any): Promise<boolean> {
-//   const queueName = "post_optimicepostgres"; // Nombre de la cola en Cloudflare
-//   const queue = c.env[queueName]; // Acceder a la cola desde el entorno
-
-//   try {
-//     // Enviar mensaje a la cola
-//     const messageId = await queue.send({
-//       currentid: message.currentid,
-//       data: message,
-//     });
-
-//     console.log(
-//       new Date().toISOString() +
-//       " FROM FRONTEND ----- Message sent to Cloudflare Queue =>" +
-//       JSON.stringify({ messageId })
-//     );
-
-//     // Simular una respuesta similar a Kafka
-//     const responseProducer: ResponseSendMesssage = {
-//       error_code: 200,
-//       message: "Message sent successfully",
-//       queue_name: queueName,
-//       timestamp: new Date().toISOString(),
-//       value: message,
-//     };
-
-//     // Llamar a la función wakeup
-//     const err = await wakeup(c, message.currentid, responseProducer);
-//     console.log(
-//       new Date().toISOString() +
-//       " SENDED WAKUP TO BACKEND ----- response from wakeup" +
-//       JSON.stringify(err)
-//     );
-
-//     return err.status === 200;
-//   } catch (error) {
-//     console.error("Error sending message to Cloudflare Queue:", error);
-//     return false;
-//   }
-// }
-
-// async function wakeup(c: Context, currentid: string, responseProducer: ResponseSendMesssage) {
-//   console.log(
-//     "FRONTEND | " +
-//     new Date().toISOString() +
-//     " wakeup " +
-//     c.env.URL_BACKEND
-//   );
-
-//   const res = await fetch(`${c.env.URL_BACKEND}/wakeup/`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       currentid: currentid,
-//       queue: responseProducer.queue_name,
-//       timestamp: responseProducer.timestamp,
-//     }),
-//   });
-
-//   let data = { status: 500 };
-//   if (res.ok) {
-//     data = await res.json();
-//   }
-
-//   console.log(
-//     new Date().toISOString() +
-//     " From frontend ---- response wakeup " +
-//     JSON.stringify(data)
-//   );
-
-//   return data;
-// }
-
-

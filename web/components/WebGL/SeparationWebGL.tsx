@@ -1,6 +1,9 @@
 import separationSVG from "../../assets/svg/separacion.svg";
+import separationPNG from "../../assets/png/separation_webgl.png";
+import separationWEBP from "../../assets/webp/separation_webgl.webp";
 import "../../assets/css/webgl.css";
 import { useEffect, useRef, useState } from "react";
+import React from "react";
 interface SeparationWebGLProps {
   containerRef: React.RefObject<HTMLDivElement>;
 }
@@ -40,13 +43,13 @@ export function SeparationWebGL(props: SeparationWebGLProps) {
     <>
       <picture>
         {/* <source srcSet={separationAVIF} type="image/avif" /> */}
-        {/* <source srcSet={separationWEBP} type="image/webp" /> */}
-        {/* <source srcSet={separationPNG} type="image/png" /> */}
+        <source srcSet={separationWEBP} type="image/webp" />
+        <source srcSet={separationPNG} type="image/png" />
         <source srcSet={separationSVG} type="image/svg" />
         <img ref={separationRef} style={{
           position: "absolute",
           top: `${position.y}px`,
-        }} className={`${position.visibility} separationwebgl`} src={separationSVG} alt="separation webgl" />
+        }} className={`${position.visibility} separationwebgl`} src={separationPNG} alt="separation webgl" />
       </picture>
     </>
   );

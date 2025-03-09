@@ -54,7 +54,7 @@ export async function sendMessageTroughtWS(payload: DataJSON){
   console.log("2 - sendMessageTroughtWS emit")
 
   const emiited = eventEmitter.emit("sendmessage", payload);
-  console.log("2a emited" + emiited);
+  console.log("2a emited: " + emiited);
 }
 
 

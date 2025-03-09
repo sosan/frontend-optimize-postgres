@@ -95,6 +95,9 @@
 
 
 import { Context } from "hono";
+import { Redis } from "@upstash/redis/cloudflare";
+import { ResponseResults } from "./model";
+
 export interface ResponseConsumer {
   instance_id: string;
   base_uri: string;
@@ -103,11 +106,40 @@ export interface ResponseConsumer {
 const maxAttempts = 25;
 
 export interface DataTopic {
-    "key": string | null;
-    "value": object;
-    "partition": number;
-    "offset": number;
-    "topic": string;
+  "key": string | null;
+  "value": object;
+  "partition": number;
+  "offset": number;
+  "topic": string;
+}
+
+async function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export async function responseRedis(c: Context, userID: string): Promise<ResponseResults | undefined> {
+  const redis = new Redis({
+    url: c.env.UPSTASH_REDIS_REST_URL,
+    token: c.env.UPSTASH_REDIS_REST_TOKEN,
+  });
+
+  if (redis === undefined || redis === null) {
+    console.log("redis undefined");
+    return undefined;
+  }
+  console.log("waiting 10_000")
+  await sleep(10000);
+  let results: ResponseResults;
+  for (let i = 0; i < 10; i++) {
+    results = await redis.hget("offsets", userID) as ResponseResults;
+    console.log(i + " results: " + JSON.stringify(results));
+    if (results !== null) {
+      return results;
+    }
+    await sleep(1000);
+  }
+  console.log("more than 10 times")
+  return undefined;
 }
 
 export async function responseFromBroker(c: Context, userID: string): Promise<any> {

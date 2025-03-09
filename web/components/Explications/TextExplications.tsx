@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import rightChevron from "../../assets/png/right-chevron.png";
+import React from "react";
 
 export interface Expli {
   key: string;

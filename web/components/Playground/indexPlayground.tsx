@@ -10,6 +10,7 @@ import { Tryme } from "../Textareas/Tryme.js";
 import { EVENT_NAME_RESULT, ResultState } from "../Cards/BackCard.js";
 import { LOADING_RENDERING_RESULTS } from "../LoadingResults/indexLoadingResults.js";
 import { EVENT_EDITOR_DDL, EVENT_EDITOR_DML } from "../Textareas/Editor.js";
+import React from "react";
 const controller = new AbortController();
 const signalController = controller.signal;
 
@@ -35,11 +36,27 @@ export function Playground() {
   URI.pathname = "/api/queries";
   // URI.pathname = "/checkws/helo";
 
+  async function sanitized(values: FieldType) {
+    values.ddlschema = sanitizeDDL(values.ddlschema)
+    values.queries = sanitizeDDL(values.queries)
+    return values;
+  }
+
+  function sanitizeDDL(input: string) {
+    return input
+      .replace(/--.*$/gm, '')
+      .split('\n')
+      .filter(line => line.trim() !== '')
+      .join('')
+      // .join('\n')
+      ;
+  }
 
   async function onFinish(values: FieldType) {
     // console.log('Success:', values);
     const isValid = showAlert(values);
     if (!isValid) return;
+    values = await sanitized(values);
     console.log("send");
     // enviarlo tambien atraves de ws
     initializeAnimation();

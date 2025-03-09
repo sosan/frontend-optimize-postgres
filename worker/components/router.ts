@@ -8,12 +8,12 @@ import { saveDatabase } from "./database";
 import { generatePayload, sendWebsocket } from "./websocketMessageReceived";
 import { randomUUID } from "./initalUser";
 import { websocketSessionHandler, sendMessageTroughtWS } from "./websocket";
-import { responseFromBroker } from "./responseBus";
+import { responseFromBroker, responseRedis } from "./responseBus";
 import { generateResponseResult } from "./responseResult";
 
 
 export async function queries(c: Context, _next: Next) {
-  const content: Queries = await c.req.json<Queries>();
+  const content: Queries = await c.req.json() as Queries;
   if (content === undefined || content === null || content.currentid === undefined || content.currentid === "") {
     return c.json({ error: "not content", status: 400 });
   }
@@ -22,28 +22,28 @@ export async function queries(c: Context, _next: Next) {
   //   return c.json({ error: "not content", status: 400 });
   // }
 
-  let err = await sendBusMessage(c, content);
-  if (err) {
+  let isOk = await sendBusMessage(c, content);
+  if (!isOk) {
     console.log("ERROR in sendbusmessage");
     return c.json({ error: "not content", status: 400 });
   }
   console.log(new Date().toISOString() + "SAVING DATABASE");
-  err = await saveDatabase(c, content);
-  if (err) {
+  isOk = await saveDatabase(c, content);
+  if (!isOk) {
     //TODO: dead letter
     return c.json({ error: "not content", status: 400 });
   }
   console.log(new Date().toISOString() + " WAITING for response from broker");
-  // c.executionCtx.waitUntil(responseFromBroker(c, content.currentid));
-  const resBroker = await responseFromBroker(c, content.currentid);
-  if (!resBroker || !resBroker.found || !resBroker.message) {
+  // c.executionCtx.waitUntil(responseRedis(c, content.currentid));
+  const response = await responseRedis(c, content.currentid);
+  if (response === undefined) {
     // TODO: Deadletter
     console.log("ERROR | Not found key in kafka messages");
     return c.json({ error: "Not found", status: 404 });
   }
-
-  const resultPayload = await generateResponseResult(resBroker.message);
-  // await sendMessageTroughtWS(resultPayload);
+  console.log("response not null, generating payload")
+  const resultPayload = await generateResponseResult(response);
+  await sendMessageTroughtWS(resultPayload);
   // sendMessage(resultPayload);
   // console.log("mensaje encontrado= " + JSON.stringify(resBroker.message));
   return c.json({ error: "", status: 200, content: resultPayload });

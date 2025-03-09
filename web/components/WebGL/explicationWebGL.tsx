@@ -11,19 +11,20 @@ import React from "react";
 let canvas = null;
 let mode: any = null;
 
-const CURRENT_MODE = Fragmen.MODE_GEEKEST_300;
+const CURRENT_MODE = Fragmen.MODE_GEEKEST_300; //Fragmen.RAINBOW_MODE_GEEKEST_300;
 // let currentSource = "" as string;
 
 
 interface ContainerProps {
-  embeded: boolean
-  idCanvas: string
-  width: string
-  height: string
-  sourceRender: string
-  idContainer: string
-  eventRenderingName: string
-  initialRender: boolean
+  embeded: boolean;
+  idCanvas: string;
+  width: string;
+  height: string;
+  sourceRender: string;
+  idContainer: string;
+  eventRenderingName: string;
+  initialRender: boolean;
+  modeRender: string;
 }
 
 // interface ContainerState {
@@ -32,7 +33,7 @@ interface ContainerProps {
 
 let fragmen: any = null;
 
-export function HeaderWebGL(props: ContainerProps) {
+export function ExplicationWebGL(props: ContainerProps) {
   // const location = useLocation();
   // let renderingWebGL = true;
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -49,9 +50,7 @@ export function HeaderWebGL(props: ContainerProps) {
 
     addListenerForEvents([props.eventRenderingName], setComponentState)
     window.addEventListener("resize", toggleLayerView);
-    // window.addEventListener("resize", () => {
-    //   toggleLayerView();
-    // }, false);
+
     return () => {
       window.removeEventListener("resize", toggleLayerView);
     };
@@ -93,15 +92,18 @@ export function HeaderWebGL(props: ContainerProps) {
         fragmen.setFrequency(freq);
       }
     });
-
-    fragmen.mode = CURRENT_MODE;
+    if (props.modeRender === "") {
+      fragmen.mode = Fragmen.MODE_CLASSIC;
+    } else {
+      fragmen.mode = CURRENT_MODE;
+    }
     fragmen.render(currentSource);
 
-    if (fragmen.isWebGL2 !== true) {
-      for (let i = 0; i < mode.children.length; ++i) {
-        mode.children[i].disabled = Fragmen.RAINBOW_MODE_GEEKEST_300.includes(i);
-      }
-    }
+    // if (fragmen.isWebGL2 !== true) {
+    //   for (let i = 0; i < mode.children.length; ++i) {
+    //     mode.children[i].disabled = Fragmen.RAINBOW_MODE_GEEKEST_300.includes(i);
+    //   }
+    // }
   }
 
   function resize() {
@@ -136,13 +138,12 @@ export function HeaderWebGL(props: ContainerProps) {
   }
 
   initRender();
-
+  // }
   return (
     <>
-      <div ref={containerRef} id={props.idContainer} className={(renderingWebGL) ? "initialvisible" : "novisible"}>
-        <canvas id={props.idCanvas} width={props.width} height={props.height}></canvas>
+      <div ref={containerRef} id={props.idContainer} className={(renderingWebGL) ? "initialvisible" : "novisible"} >
+        <canvas className="border-circle" id={props.idCanvas} width={props.width} height={props.height}></canvas>
       </div>
-      <SeparationWebGL containerRef={containerRef as React.RefObject<HTMLDivElement>} />
     </>
   );
 }

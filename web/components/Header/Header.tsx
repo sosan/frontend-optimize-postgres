@@ -16,6 +16,7 @@ import { Sandbox } from "../../pages/Sandbox/mainSandbox";
 import { Blog } from "../../pages/Blog/mainBlog";
 import { Community } from "../../pages/Community/mainCommunity";
 import { Docs } from "../../pages/Docs/mainDocs";
+import React from 'react';
 
 export function HeaderNav() {
   return (

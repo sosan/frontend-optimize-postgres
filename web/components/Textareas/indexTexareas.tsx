@@ -3,6 +3,7 @@ import "../../assets/css/textarea.css";
 import { ButtonSendInfo } from "./ButtonSendInsights.js";
 import { FormInstance } from "antd";
 import { ButtonViewBackCard } from "./ButtonViewBackCard.js";
+import React from "react";
 
 
 interface ContainerProps {

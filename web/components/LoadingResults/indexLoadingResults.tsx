@@ -1,3 +1,4 @@
+import React from "react";
 import { LoadingResultWebGL } from "../WebGL/loadingResultWebGL";
 export const LOADING_RENDERING_RESULTS = "loadingrenderingresults";
 

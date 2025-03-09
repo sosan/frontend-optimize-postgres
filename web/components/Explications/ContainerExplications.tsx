@@ -2,6 +2,7 @@ import { Expli, TextExplication } from "./TextExplications";
 import { ImageContainerExplications } from "../Cards/CardContainer";
 // import { BackgroundExplications } from "./BackgroundExplications";
 import { LoadingResultWebGL } from "../WebGL/loadingResultWebGL";
+import React from "react";
 
 interface ContainerProps {
   listExplications: Expli[]

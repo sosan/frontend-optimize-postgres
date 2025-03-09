@@ -6,6 +6,7 @@ import "../../assets/css/textarea.css";
 import { useEffect, useRef } from 'react';
 import { addListenerForEvents } from "../Notification/eventEmitter";
 import { ResultState } from '../Cards/BackCard';
+import React from 'react';
 // import { dataSources } from '../Cards/FineCard';
 
 export const EVENT_EDITOR_DDL = "editor_ddl";
@@ -48,7 +49,7 @@ const highlightLinesField = StateField.define<DecorationSet>({
   },
   provide: f => EditorView.decorations.from(f)
 });
-export function Editor(props: ContainerProps, _: ContainerState) {
+export function Editor(props: ContainerProps) {
   const extensions: Extension[] = [sql(), highlightLinesField];
   const editorRef = useRef(null);
 
@@ -93,17 +94,17 @@ export function Editor(props: ContainerProps, _: ContainerState) {
 
     console.log("+++" + props.nameItem)
     for (let i = 0; i < (resultData.columnDataSource?.length as number); i++) {
-        if (props.nameItem === "ddlschema" && resultData.columnDataSource![i]?.kind === DDL_KIND_NAME) {
-          let line = resultData.columnDataSource![i]?.position?.split(" ")[2] as string;
-          if (!line) continue;
-          if (view.state.doc.line(line).text.startsWith("--")) {
-            const newLine = Number.parseInt(line) + 1;
-            line = newLine.toString();
-          }
-          listEffects.push(highlightLineEffect.of({
-            from: view.state.doc.line(line).from,
-            to: view.state.doc.line(line).to
-          }));
+      if (props.nameItem === "ddlschema" && resultData.columnDataSource![i]?.kind === DDL_KIND_NAME) {
+        let line = resultData.columnDataSource![i]?.position?.split(" ")[2] as string;
+        if (!line) continue;
+        if (view.state.doc.line(line).text.startsWith("--")) {
+          const newLine = Number.parseInt(line) + 1;
+          line = newLine.toString();
+        }
+        listEffects.push(highlightLineEffect.of({
+          from: view.state.doc.line(line).from,
+          to: view.state.doc.line(line).to
+        }));
       }
 
       if (props.nameItem === "queries" && resultData.columnDataSource![i]?.kind === DML_KIND_NAME) {

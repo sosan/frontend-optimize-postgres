@@ -4,7 +4,11 @@ import {  HRedisModel, Queries } from "./model";
 
 export async function saveDatabase(c: Context, content: Queries) {
   // console.log("saveDatabase");
-  const redis = Redis.fromEnv(c.env);
+  // const redis = Redis.fromEnv(c.env);
+  const redis = new Redis({
+    url: c.env.UPSTASH_REDIS_REST_URL,
+    token: c.env.UPSTASH_REDIS_REST_TOKEN,
+  });
 
   if (redis === undefined || redis === null) {
     console.log("redis undefined");
@@ -15,7 +19,7 @@ export async function saveDatabase(c: Context, content: Queries) {
   const kv: HRedisModel = await generateDBContent(content);
   const res = await redis.hsetnx("post_quereisss", kv.keyField, kv.content);
   console.log("saveDatabase response=" + res);
-  return res !== 1
+  return res === 1
 }
 
 async function generateDBContent(content: Queries) {

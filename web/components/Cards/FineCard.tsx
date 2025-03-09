@@ -2,6 +2,7 @@ import { ConfigProvider, Table, TableProps, Tag, ThemeConfig } from "antd";
 import { ResultState } from "./BackCard";
 import { ColumnDataType } from "@/models/models";
 import "../../assets/css/finecard.css";
+import React from "react";
 
 interface ContainerProps {
   resultData: ResultState

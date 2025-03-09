@@ -83,23 +83,19 @@ export interface Statistics {
   total: number;
 }
 
-export interface Analysis {
-  ddl: DDLItem[][];
-  dml: DMLItem[];
-  config: ConfigItem[];
-  statistics: AllStatics;
-  //  {
-  //   ddl: Statistics;
-  //   dml: Statistics;
-  //   common: Statistics;
-  // };
-}
-
 export interface AllStatics {
   ddl: Statistics;
   dml: Statistics;
   common: Statistics;
 }
+
+export interface Analysis {
+  ddl: DDLItem[][];
+  dml: DMLItem[];
+  config: ConfigItem[];
+  statistics: AllStatics;
+}
+
 
 export interface CounterAnalytics {
   architect: number;

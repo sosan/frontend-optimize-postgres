@@ -1,3 +1,4 @@
+import React from "react";
 
 export function ImageContainerExplications({ children }: any) {
   return (
@@ -6,15 +7,12 @@ export function ImageContainerExplications({ children }: any) {
         <div className="border-back-explication"></div>
         <div className="back-explication"></div>
         <div className="card h-64">
-            <div className="front-explication w-full ">
-              <div className="front-all ">
-                <div className="explication-content
-               
-
-                ">
-                    {children}
-                </div>
+          <div className="front-explication w-full ">
+            <div className="front-all ">
+              <div className="explication-content">
+                {children}
               </div>
+            </div>
           </div>
         </div>
       </section>

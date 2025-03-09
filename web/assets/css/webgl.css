@@ -96,6 +96,7 @@
 .separationwebgl{
   position: absolute;
   width: 100%;
+  z-index: -1;
 }
 
 @keyframes slide-in {
@@ -119,3 +120,6 @@
   }
 }
 
+.border-circle{
+  border-radius: 30px;
+}
